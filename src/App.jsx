@@ -41,7 +41,7 @@ function App() {
     setStatus('info');
 
     try {
-      const res = await fetch('http://100.86.86.110:3001/upload', {
+      const res = await fetch('http://192.168.1.32:3001/upload', {
         method: 'POST',
         body: formData,
       });
