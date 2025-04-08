@@ -1,19 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 function App() {
   const [file, setFile] = useState(null);
   const [canSave, setCanSave] = useState(false);
-  const [message, setMessage] = useState('');
-  const [status, setStatus] = useState(''); // success | error | info
-
+  const [message, setMessage] = useState("");
+  const [status, setStatus] = useState(""); // success | error | info
+  const API_URL =
+    window.location.hostname === "localhost"
+      ? "http://localhost:3001/upload"
+      : "http://192.168.1.32:3001/upload";
   const handleFileChange = async (e) => {
     const selected = e.target.files[0];
     if (selected) {
       setMessage(`File "${selected.name}" selected.`);
-      setStatus('info');
+      setStatus("info");
 
       // Skapa en klon av filen för att undvika ERR_UPLOAD_FILE_CHANGED
-      const cloned = new File([selected], selected.name, { type: selected.type });
+      const cloned = new File([selected], selected.name, {
+        type: selected.type,
+      });
       setFile(cloned);
       setCanSave(false);
 
@@ -21,42 +26,42 @@ function App() {
       setTimeout(() => {
         setCanSave(true);
         setMessage(`Ready to save "${selected.name}"`);
-        setStatus('success');
+        setStatus("success");
       }, 300);
     }
   };
 
   const handleUploadClick = () => {
-    document.getElementById('fileInput').click();
+    document.getElementById("fileInput").click();
   };
 
   const handleSave = async () => {
     if (!file) return;
 
     const formData = new FormData();
-    formData.append('file', file);
+    formData.append("file", file);
 
     setCanSave(false);
-    setMessage('Uploading...');
-    setStatus('info');
+    setMessage("Uploading...");
+    setStatus("info");
 
     try {
-      const res = await fetch('http://192.168.1.32:3001/upload', {
-        method: 'POST',
+      const res = await fetch(API_URL, {
+        method: "POST",
         body: formData,
       });
 
       if (res.ok) {
         setMessage(`File "${file.name}" saved to Computer!`);
-        setStatus('success');
+        setStatus("success");
         setFile(null);
       } else {
-        setMessage('Upload failed.');
-        setStatus('error');
+        setMessage("Upload failed.");
+        setStatus("error");
       }
     } catch (err) {
       setMessage(`Error: ${err.message}`);
-      setStatus('error');
+      setStatus("error");
     }
   };
 
@@ -80,18 +85,24 @@ function App() {
         onClick={handleSave}
         disabled={!canSave}
         className={`text-xl px-6 py-4 rounded-2xl shadow-md text-white transition ${
-          canSave ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-400 cursor-not-allowed'
+          canSave
+            ? "bg-green-500 hover:bg-green-600"
+            : "bg-gray-400 cursor-not-allowed"
         }`}
       >
         Save
       </button>
 
       {message && (
-        <div className={`mt-4 text-center text-lg font-medium ${
-          status === 'success' ? 'text-green-600' :
-          status === 'error' ? 'text-red-600' :
-          'text-gray-700'
-        }`}>
+        <div
+          className={`mt-4 text-center text-lg font-medium ${
+            status === "success"
+              ? "text-green-600"
+              : status === "error"
+              ? "text-red-600"
+              : "text-gray-700"
+          }`}
+        >
           {message}
         </div>
       )}
