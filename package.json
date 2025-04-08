@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "postcss.config.js",
   "type": "module",
-  "homepage": "https://DITT-GITHUB-NAMN.github.io/local-cloud-uploader",
+  "homepage": "https://github.com/NybergViktor/local-cloud-uploader.git",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
